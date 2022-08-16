@@ -1,10 +1,13 @@
 package com.entra21.sistemarh;
 
-import javax.activation.DataSource;
+import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.vendor.Database;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 /**
  * Configuração do Banco de Dados
@@ -25,7 +28,20 @@ public class DataConfiguration {
         dataSource.setUsername("root");
         dataSource.setPassword("josimara");
 
-        return dataSource();
+        return dataSource;
+    }
+
+    //COnfiguração padrão de BD
+    @Bean
+    public JpaVendorAdapter JpaVendorAdapter(){
+        HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
+        adapter.setDatabase(Database.MYSQL);
+        adapter.setShowSql(true);
+        adapter.setGenerateDdl(true);
+        adapter.setDatabasePlatform("org.hibernate.dialect.MariaDBDialect");
+        adapter.setPrepareConnection(true);
+        return adapter;
+        
     }
     
 }
