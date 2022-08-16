@@ -31,7 +31,7 @@ public class DataConfiguration {
         return dataSource;
     }
 
-    //COnfiguração padrão de BD
+    //Configuração padrão de BD
     @Bean
     public JpaVendorAdapter JpaVendorAdapter(){
         HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
