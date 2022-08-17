@@ -110,7 +110,26 @@ public class VagaController {
         return "redirect:/" + codigo;
     }
 
-    //
+    //Métodos que atualizam vagas
+    //formulário de edição de vaga
+    @RequestMapping(value = "/editarVaga", method = RequestMethod.GET)
+    public ModelAndView editarVaga(long codigo){
+        Vaga vaga = vagaRepository.findByCodigo(codigo);
+        ModelAndView modelAndView = new ModelAndView("vaga/update-vaga");
+        modelAndView.addObject("vaga", vaga);
+        return modelAndView;
+    }
+
+    //Update da Vaga
+    @RequestMapping(value = "/editar-vaga",method = RequestMethod.POST)
+    public String updateVaga(@Valid Vaga vaga, BindingResult result, RedirectAttributes attributes){
+        vagaRepository.save(vaga);
+        attributes.addFlashAttribute("success", "Vaga alterada com sucesso!");
+        long codigoLong = vaga.getCodigo();
+        String codigo = "" + codigoLong;
+        return "redirect:/" + codigo;
+
+    }
 
 
 
