@@ -98,7 +98,19 @@ public class VagaController {
     
     }
 
-    //Deletar Candidato
+    //Deletar Candidato pelo RG
+    @RequestMapping(value = "/deletarCandidato")
+    public String deletarCandidato(String rg){
+        Candidato candidato = candidatoRepository.findByRg(rg);
+        Vaga vaga = candidato.getVaga();
+        String codigo = "" + vaga.getCodigo();
+
+        candidatoRepository.delete(candidato);
+
+        return "redirect:/" + codigo;
+    }
+
+    //
 
 
 
