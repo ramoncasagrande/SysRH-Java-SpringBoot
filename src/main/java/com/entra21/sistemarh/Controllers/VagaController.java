@@ -21,18 +21,20 @@ public class VagaController {
 
     @Autowired
     private VagaRepository vagaRepository;
+
+    @Autowired
     private CandidatoRepository candidatoRepository;
 
-    //Cadastrar Vaga
+    // Cadastrar Vaga
     @RequestMapping(value = "/cadastrarVaga", method = RequestMethod.GET)
-    public String form(){
+    public String form() {
         return "vaga/formVaga";
     }
 
     @RequestMapping(value = "/cadastrarVaga", method = RequestMethod.POST)
-    public String form(@Valid Vaga vaga, BindingResult result, RedirectAttributes attributes){
+    public String form(@Valid Vaga vaga, BindingResult result, RedirectAttributes attributes) {
 
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             attributes.addFlashAttribute("mensagem", "Verifique os campos!");
             return "redirect:/cadastrarVaga";
         }
@@ -41,9 +43,9 @@ public class VagaController {
         return "redirect:/cadastrarVaga";
     }
 
-    //Listar Vagas
+    // Listar Vagas
     @RequestMapping(value = "/vagas")
-    public ModelAndView listaVagas(){
+    public ModelAndView listaVagas() {
         ModelAndView modelAndView = new ModelAndView("vaga/listaVaga");
         Iterable<Vaga> vagas = vagaRepository.findAll();
         modelAndView.addObject("vagas", vagas);
@@ -55,14 +57,50 @@ public class VagaController {
     public ModelAndView detalhesVaga(@PathVariable("codigo") long codigo) {
         Vaga vaga = vagaRepository.findByCodigo(codigo);
         ModelAndView modelAndView = new ModelAndView("vaga/detalhesVaga");
-        modelAndView.addObject("vaga",vaga);
+        modelAndView.addObject("vaga", vaga);
 
-        Iterable<Candidato>candidatos = candidatoRepository.findByVaga(vaga);
+        Iterable<Candidato> candidatos = candidatoRepository.findByVaga(vaga);
         modelAndView.addObject("candidatos", candidatos);
 
         return modelAndView;
+    }
+
+    // Deletar Vaga
+    @RequestMapping(value = "/deletarVaga")
+    public String deletarVaga(long codigo) {
+        Vaga vaga = vagaRepository.findByCodigo(codigo);
+        vagaRepository.delete(vaga);
+        return "redirect:/vagas";
 
     }
 
+    //Adicionar Candidato
+    @RequestMapping(value = "/{codigo}", method = RequestMethod.POST)
+    public String detalhesVagaPost(@PathVariable("codigo") long codigo, @Valid Candidato candidato,
+            BindingResult result, RedirectAttributes attributes) {
+
+                if (result.hasErrors()){
+                    attributes.addFlashAttribute("mensagem", "Verifique os campos!");
+                    return "redirec:/{codigo}";
+                }
+
+                //RG duplicado
+                if(candidatoRepository.findByRg(candidato.getRg()) != null){
+                    attributes.addFlashAttribute("mensagem erro", "RG duplicado");
+                    return "redirec:/{codigo}";
+                }
+
+                Vaga vaga = vagaRepository.findByCodigo(codigo);
+                candidato.setVaga(vaga);
+                candidatoRepository.save(candidato);
+                attributes.addFlashAttribute("mensagem", "Candidato adicionado com Sucesso");
+                return "redirec:/{codigo}";
     
+    }
+
+    //Deletar Candidato
+
+
+
+
 }
