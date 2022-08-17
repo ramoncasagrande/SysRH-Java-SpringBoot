@@ -121,7 +121,7 @@ public class VagaController {
     }
 
     //Update da Vaga
-    @RequestMapping(value = "/editar-vaga",method = RequestMethod.POST)
+    @RequestMapping(value = "/editarVaga", method = RequestMethod.POST)
     public String updateVaga(@Valid Vaga vaga, BindingResult result, RedirectAttributes attributes){
         vagaRepository.save(vaga);
         attributes.addFlashAttribute("success", "Vaga alterada com sucesso!");
