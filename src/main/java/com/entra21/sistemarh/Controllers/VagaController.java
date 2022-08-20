@@ -81,20 +81,20 @@ public class VagaController {
 
                 if (result.hasErrors()){
                     attributes.addFlashAttribute("mensagem", "Verifique os campos!");
-                    return "redirec:/{codigo}";
+                    return "redirect:/{codigo}";
                 }
 
                 //RG duplicado
                 if(candidatoRepository.findByRg(candidato.getRg()) != null){
-                    attributes.addFlashAttribute("mensagem erro", "RG duplicado");
-                    return "redirec:/{codigo}";
+                    attributes.addFlashAttribute("mensagem_erro", "RG duplicado");
+                    return "redirect:/{codigo}";
                 }
 
                 Vaga vaga = vagaRepository.findByCodigo(codigo);
                 candidato.setVaga(vaga);
                 candidatoRepository.save(candidato);
                 attributes.addFlashAttribute("mensagem", "Candidato adicionado com Sucesso");
-                return "redirec:/{codigo}";
+                return "redirect:/{codigo}";
     
     }
 
